@@ -6,10 +6,10 @@ var movementSpeed = 0;
 var direction = Vector2()
 var targetPosition = Vector2()
 var parts = Array()
+var hasMoved = false
 
 func _ready():
 	targetPosition = position
-	add_part()
 	add_part()
 	add_part()
 	add_part()
@@ -33,6 +33,9 @@ func _process(delta):
 		
 	if  Input.is_action_pressed("ui_right"):
 		direction = Vector2(1, 0)
+		
+	if !hasMoved and direction == Vector2(0,0):
+		hasMoved = true
 	
 	movementSpeed += delta
 	if movementSpeed > .25 and position == targetPosition:
@@ -51,3 +54,13 @@ func _process(delta):
 		position += direction * 64
 		targetPosition = targetPosition + (direction * 64)
 			
+
+func _on_Player_area_entered(area):
+	if area.is_in_group("food"):
+		area.queue_free()
+		add_part()
+		get_parent().spawn_food()
+	elif hasMoved and area.is_in_group("part"):
+		print(area.name)
+		
+		

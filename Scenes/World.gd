@@ -1,10 +1,20 @@
 extends Node
 
+const FOOD = preload("res://Scenes/Food.tscn") 
+
 func _ready():	
 	var screen_size = OS.get_screen_size()
 	var window_size = OS.get_window_size()	
 	OS.set_window_position(screen_size*0.5 - window_size*0.5)
+	
+	spawn_food()
 
 func _physics_process(delta):
 	if Input.is_key_pressed(KEY_ESCAPE):
 		get_tree().quit()
+		
+func spawn_food():
+	var food = FOOD.instance()
+	var pos = Vector2(rand_range(0, 20), rand_range(0, 11)) * 64
+	food.global_position = pos
+	add_child(food)
