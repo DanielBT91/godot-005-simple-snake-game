@@ -9,6 +9,8 @@ var parts = Array()
 var hasMoved = false
 var dead = false
 
+signal eat_food
+
 func _ready():
 	targetPosition = position
 	add_part()
@@ -28,6 +30,9 @@ func _process(delta):
 	
 	if dead:
 		return
+	
+	check_out_of_screen()
+		
 	
 	if  Input.is_action_pressed("ui_up"):
 		direction = Vector2(0, -1)
@@ -60,7 +65,19 @@ func _process(delta):
 		movementSpeed = 0	
 		position += direction * 64
 		targetPosition = targetPosition + (direction * 64)
-			
+
+func check_out_of_screen():
+	var kill = false	
+	if get_viewport().get_visible_rect().size.x < global_position.x or 0 > global_position.x:
+		kill = true;
+	if get_viewport().get_visible_rect().size.y < global_position.y or 0 > global_position.y:
+		kill = true;
+		
+	if kill:
+		dead = true
+		get_parent().game_over()
+		for part in parts:
+			part.get_node("TimerFlash").start()
 
 func _on_Player_area_entered(area):
 	
@@ -71,6 +88,7 @@ func _on_Player_area_entered(area):
 		area.queue_free()
 		add_part()
 		get_parent().spawn_food()
+		emit_signal("eat_food")
 	elif hasMoved and area.is_in_group("part"):
 		print(area.name)
 		dead = true

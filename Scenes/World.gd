@@ -3,7 +3,7 @@ extends Node
 const FOOD = preload("res://Scenes/Food.tscn") 
 
 func _ready():	
-#	randomize()
+	randomize()
 
 	var screen_size = OS.get_screen_size()
 	var window_size = OS.get_window_size()	
