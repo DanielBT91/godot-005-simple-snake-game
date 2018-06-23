@@ -7,6 +7,7 @@ var direction = Vector2()
 var targetPosition = Vector2()
 var parts = Array()
 var hasMoved = false
+var dead = false
 
 func _ready():
 	targetPosition = position
@@ -16,11 +17,17 @@ func _ready():
 
 func add_part():
 	var part = PART.instance()
-	part.global_position = global_position
+	if(parts.size() > 0):
+		part.global_position = parts[parts.size() - 1].global_position
+	else:
+		part.global_position = global_position
 	get_parent().call_deferred("add_child", part)
 	parts.append(part)
 
 func _process(delta):
+	
+	if dead:
+		return
 	
 	if  Input.is_action_pressed("ui_up"):
 		direction = Vector2(0, -1)
@@ -56,11 +63,18 @@ func _process(delta):
 			
 
 func _on_Player_area_entered(area):
+	
+	if dead:
+		return
+	
 	if area.is_in_group("food"):
 		area.queue_free()
 		add_part()
 		get_parent().spawn_food()
 	elif hasMoved and area.is_in_group("part"):
 		print(area.name)
+		dead = true
+		area.get_node("TimerFlash").start()
+		get_parent().game_over()
 		
 		
