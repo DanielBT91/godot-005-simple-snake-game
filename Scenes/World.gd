@@ -19,7 +19,7 @@ func spawn_food():
 	var food = FOOD.instance()
 	
 	var pos
-	for i in 20:
+	for i in 100:
 		
 		pos = Vector2(round(rand_range(0, 20)), round(rand_range(1, 10))) * 64
 		pos += Vector2(32, 32)
