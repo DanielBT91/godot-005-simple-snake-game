@@ -50,8 +50,17 @@ autostart = false
 
 rect_scale = Vector2( 2, 2 )
 
+[node name="HTTPRequest" type="HTTPRequest" parent="." index="4"]
+
+download_file = ""
+use_threads = false
+body_size_limit = -1
+max_redirects = 8
+
 [connection signal="area_entered" from="Player" to="Player" method="_on_Player_area_entered"]
 
-[connection signal="eat_food" from="Player" to="HUD" method="_on_Player_eat_food"]
+[connection signal="eat_food" from="Player" to="." method="_on_Player_eat_food"]
+
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
 
 

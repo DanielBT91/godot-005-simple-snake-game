@@ -9,6 +9,7 @@ var parts = Array()
 var hasMoved = false
 var dead = false
 var old_rotation = 0
+var canMove = true
 
 signal eat_food
 
@@ -54,7 +55,7 @@ func _process(delta):
 	if !hasMoved and direction != Vector2(0,0):
 		hasMoved = true
 	
-	if hasMoved:
+	if hasMoved and canMove:
 		movementSpeed += delta
 		if movementSpeed > .25 and position == targetPosition:
 			manage_parts()
@@ -133,8 +134,6 @@ func _on_Player_area_entered(area):
 		area.hide()
 		add_part()
 		emit_signal("eat_food")
-		while !get_parent().spawn_food():
-			hasMoved = false
 		hasMoved = true
 			
 	elif hasMoved and area.is_in_group("part"):
@@ -142,5 +141,4 @@ func _on_Player_area_entered(area):
 		dead = true
 		area.get_node("TimerFlash").start()
 		get_parent().game_over()
-		
 		

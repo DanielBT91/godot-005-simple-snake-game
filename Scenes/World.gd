@@ -3,6 +3,9 @@ extends Node
 const FOOD = preload("res://Scenes/Food.tscn") 
 
 var foods = Array()
+var food_eaten = 0
+var food_round = 0
+var food_round_max = 5
 
 func _ready():	
 	randomize()
@@ -17,7 +20,7 @@ func _physics_process(delta):
 	if Input.is_key_pressed(KEY_ESCAPE):
 		get_tree().quit()
 		
-func spawn_food():
+func spawn_food():	
 	var food = null
 	
 	for f in foods:
@@ -65,3 +68,16 @@ func game_over():
 		yield($Timer, "timeout")
 		print("reload scene")
 		get_tree().reload_current_scene()
+
+
+func _on_Player_eat_food():
+	$Player.canMove = false
+	food_eaten += 1		
+	$HUD.update_hud(food_eaten)
+	spawn_food()
+	
+	food_round += 1
+	if food_round >= food_round_max:
+		food_round = 0
+		spawn_food()
+	$Player.canMove = true
