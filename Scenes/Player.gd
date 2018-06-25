@@ -61,6 +61,7 @@ func _process(delta):
 			movementSpeed = 0		
 			position += direction * 64
 			targetPosition = targetPosition + (direction * 64)
+			
 
 func check_out_of_screen():
 	var kill = false	
@@ -128,10 +129,14 @@ func _on_Player_area_entered(area):
 		return
 	
 	if area.is_in_group("food"):
-		area.queue_free()
+		area.global_position = Vector2(-100, -100)
+		area.hide()
 		add_part()
-		get_parent().spawn_food()
 		emit_signal("eat_food")
+		while !get_parent().spawn_food():
+			hasMoved = false
+		hasMoved = true
+			
 	elif hasMoved and area.is_in_group("part"):
 		print(area.name)
 		dead = true

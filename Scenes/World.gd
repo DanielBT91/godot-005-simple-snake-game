@@ -2,6 +2,8 @@ extends Node
 
 const FOOD = preload("res://Scenes/Food.tscn") 
 
+var foods = Array()
+
 func _ready():	
 	randomize()
 
@@ -16,12 +18,23 @@ func _physics_process(delta):
 		get_tree().quit()
 		
 func spawn_food():
-	var food = FOOD.instance()
+	var food = null
+	
+	for f in foods:
+		if f.visible == false:
+			food = f
+			food.show()
+			break
+			
+	if food == null:
+		food = FOOD.instance()
+		foods.append(food) 
+		add_child(food)
 	
 	var pos
 	for i in 100:
 		
-		pos = Vector2(round(rand_range(0, 20)), round(rand_range(1, 10))) * 64
+		pos = Vector2(round(rand_range(0, 19)), round(rand_range(1, 10))) * 64
 		pos += Vector2(32, 32)
 		
 		if pos == $Player.global_position:
@@ -32,10 +45,17 @@ func spawn_food():
 			if pos == part.global_position:
 				print("food on part new pos")
 				continue
+		
+		for f in foods:
+			if pos == f.global_position:
+				print("food on other food new pos")
+				continue
+		
 		break			
 		
 	food.global_position = pos
-	add_child(food)
+	
+	return true
 
 func game_over():
 	if $Timer.time_left == 0:
