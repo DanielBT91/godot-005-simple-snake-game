@@ -7,10 +7,7 @@ path="res://.import/grid.png-9bb66f80dbdd793fb4bb275a0d999fdf.stex"
 [deps]
 
 source_file="res://grid.png"
-source_md5="4edff1cc0837c7dfbade152fa4732b74"
-
 dest_files=[ "res://.import/grid.png-9bb66f80dbdd793fb4bb275a0d999fdf.stex" ]
-dest_md5="61d5f246a0161948dbbafa02c5942d89"
 
 [params]
 

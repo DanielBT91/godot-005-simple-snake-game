@@ -34,31 +34,7 @@ func spawn_food():
 		foods.append(food) 
 		add_child(food)
 	
-	var pos
-	for i in 100:
-		
-		pos = Vector2(round(rand_range(0, 19)), round(rand_range(1, 10))) * 64
-		pos += Vector2(32, 32)
-		
-		if pos == $Player.global_position:
-			print("food on player new pos")
-			continue
-		
-		for part in $Player.parts:
-			if pos == part.global_position:
-				print("food on part new pos")
-				continue
-		
-		for f in foods:
-			if pos == f.global_position:
-				print("food on other food new pos")
-				continue
-		
-		break			
-		
-	food.global_position = pos
-	
-	return true
+	food.new_position()
 
 func game_over():
 	if $Timer.time_left == 0:
@@ -70,8 +46,7 @@ func game_over():
 		get_tree().reload_current_scene()
 
 
-func _on_Player_eat_food():
-	$Player.canMove = false
+func _on_Player_eat_food():	
 	food_eaten += 1		
 	$HUD.update_hud(food_eaten)
 	spawn_food()
@@ -80,4 +55,3 @@ func _on_Player_eat_food():
 	if food_round >= food_round_max:
 		food_round = 0
 		spawn_food()
-	$Player.canMove = true
