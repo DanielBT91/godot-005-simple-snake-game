@@ -1,7 +1,10 @@
 extends Control
 
 func _ready():
-	$Panel/LabelParts.text = "0"
+	$Panel/HBoxContainer/LabelParts.text = "0"
 
-func update_hud(var foods):
-	$Panel/LabelParts.text = str(foods)
+func update_food(var foods):
+	$Panel/HBoxContainer/LabelParts.text = str(foods)
+
+func update_best(var best):
+	$Panel/HBoxContainer/LabelBest.text = str(best)

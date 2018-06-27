@@ -1,5 +1,7 @@
 extends Node
 
+var game_manager
+
 const FOOD = preload("res://Scenes/Food.tscn") 
 
 var foods = Array()
@@ -8,13 +10,17 @@ var food_round = 0
 var food_round_max = 5
 
 func _ready():	
+	game_manager = get_tree().get_root().get_node("GameManager")
+	game_manager.load_game()
+	$HUD.update_best(game_manager.save_data["best"])
+
 	randomize()
 
 	var screen_size = OS.get_screen_size()
 	var window_size = OS.get_window_size()	
 	OS.set_window_position(screen_size*0.5 - window_size*0.5)
 	
-	spawn_food()
+	spawn_food()	
 
 func _physics_process(delta):
 	if Input.is_key_pressed(KEY_ESCAPE):
@@ -38,6 +44,12 @@ func spawn_food():
 
 func game_over():
 	if $Timer.time_left == 0:
+		
+		if food_eaten > game_manager.save_data["best"]:
+			print("new highscore")
+			game_manager.save_data["best"] = food_eaten
+			game_manager.save_game()
+			
 		print("game over")
 		$Timer.wait_time = 3
 		$Timer.start()
@@ -45,10 +57,9 @@ func game_over():
 		print("reload scene")
 		get_tree().reload_current_scene()
 
-
 func _on_Player_eat_food():	
 	food_eaten += 1		
-	$HUD.update_hud(food_eaten)
+	$HUD.update_food(food_eaten)
 	spawn_food()
 	
 	food_round += 1
