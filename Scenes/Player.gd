@@ -4,6 +4,7 @@ const PART = preload("res://Scenes/Part.tscn")
 
 var movementSpeed = 0;
 var direction = Vector2()
+var old_direction = Vector2()
 var targetPosition = Vector2()
 var parts = Array()
 var hasMoved = false
@@ -53,6 +54,10 @@ func _process(delta):
 		
 	if !hasMoved and direction != Vector2(0,0):
 		hasMoved = true
+		
+	if hasMoved and old_direction == direction * -1:
+		direction = old_direction
+		$Sprite.rotation_degrees = old_rotation
 	
 	if hasMoved:
 		movementSpeed += delta
@@ -60,6 +65,7 @@ func _process(delta):
 			manage_parts()
 			movementSpeed = 0		
 			position += direction * 64
+			old_direction = direction
 			targetPosition = targetPosition + (direction * 64)
 			
 
