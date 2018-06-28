@@ -77,11 +77,8 @@ func check_out_of_screen():
 		kill = true;
 		
 	if kill:
-		dead = true
-		get_parent().game_over()
-		for part in parts:
-			part.get_node("TimerFlash").start()
-
+		game_over()
+		
 func manage_parts():
 	var pos = null
 	for i in parts.size():	
@@ -129,6 +126,13 @@ func manage_parts():
 
 	parts[parts.size() - 1].get_node("Sprite").set_texture(parts[0].PART_TAIL)
 
+func game_over():
+	if dead == false:
+		dead = true
+		get_parent().game_over()
+		for part in parts:
+			part.get_node("TimerFlash").start()
+
 func _on_Player_area_entered(area):
 	
 	if dead:
@@ -138,11 +142,8 @@ func _on_Player_area_entered(area):
 		area.global_position = Vector2(-100, -100)
 		area.hide()
 		add_part()
-		emit_signal("eat_food")
-			
-	elif hasMoved and area.is_in_group("part"):
-		print(area.name)
-		dead = true
-		area.get_node("TimerFlash").start()
-		get_parent().game_over()
+		emit_signal("eat_food")			
+		
+	elif hasMoved and (area.is_in_group("part") or area.is_in_group("spike")):
+		game_over()
 		

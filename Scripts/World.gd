@@ -3,11 +3,14 @@ extends Node
 var game_manager
 
 const FOOD = preload("res://Scenes/Food.tscn") 
+const SPIKE = preload("res://Scenes/Spike.tscn") 
 
 var foods = Array()
 var food_eaten = 0
 var food_round = 0
 var food_round_max = 5
+
+var spikes = Array()
 
 func _ready():	
 	game_manager = get_tree().get_root().get_node("GameManager")
@@ -21,19 +24,24 @@ func _ready():
 	OS.set_window_position(screen_size*0.5 - window_size*0.5)
 	
 	spawn_food()	
+	spawn_spike()
 
 func _physics_process(delta):
 	if Input.is_key_pressed(KEY_ESCAPE):
 		get_tree().quit()
+
+func get_object_from_pool(var array):
+	var object = null
+	
+	for o in array:
+		if o.visible == false:
+			o.show()
+			return o
+			
+	return null	
 		
 func spawn_food():	
-	var food = null
-	
-	for f in foods:
-		if f.visible == false:
-			food = f
-			food.show()
-			break
+	var food = get_object_from_pool(foods)
 			
 	if food == null:
 		food = FOOD.instance()
@@ -41,6 +49,16 @@ func spawn_food():
 		add_child(food)
 	
 	food.new_position()
+
+func spawn_spike():	
+	var spike = get_object_from_pool(spikes)
+			
+	if spike == null:
+		spike = SPIKE.instance()
+		spikes.append(spike) 
+		add_child(spike)
+	
+	spike.reinstate()
 
 func game_over():
 	if $Timer.time_left == 0:
