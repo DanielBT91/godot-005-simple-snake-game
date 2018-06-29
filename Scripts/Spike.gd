@@ -1,15 +1,16 @@
 extends Area2D
 
 onready var tween = $Sprite/Tween
+onready var game_manager = get_node("/root/GameManager")
 
 var counter = 0
 var counterMax = 5
-var dangerous = false
+var danger = false
 
 func reinstate():
+	tween.stop_all()
 	new_position()
 	start_tween()
-	dangerous = false
 
 func new_position():
 	var pos = Vector2(round(rand_range(0, 19)), round(rand_range(1, 10))) * 64
@@ -18,7 +19,11 @@ func new_position():
 	
 func _process(delta):
 	
-	dangerous = $Sprite.modulate.a > .5
+	print(danger)
+	
+	if game_manager.state == game_manager.GAMESTATE.GAME_OVER:
+		tween.stop_all()
+		return
 	
 	counter += delta
 	if counter > counterMax:
@@ -31,10 +36,13 @@ func _process(delta):
 func start_tween():
 	tween.interpolate_property($Sprite, "modulate", Color(1,1,1,0), Color(1,1,1,1), 2, Tween.TRANS_LINEAR, Tween.EASE_IN, 0)
 	tween.start()
+	danger = false
 
 func _on_Tween_tween_completed(object, key):
 	tween.interpolate_property($Sprite, "rotation_degrees", $Sprite.rotation_degrees, $Sprite.rotation_degrees + 360, 5, Tween.TRANS_LINEAR, Tween.EASE_IN, 0)
 	tween.start()
+	danger = true
 	
 func _on_Spike_area_entered(area):
-	reinstate()
+	if !area.is_in_group("player"):	
+		reinstate()

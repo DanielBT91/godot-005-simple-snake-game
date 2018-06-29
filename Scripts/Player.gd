@@ -1,5 +1,7 @@
 extends Area2D
 
+onready var game_manager = get_node("/root/GameManager")
+
 const PART = preload("res://Scenes/Part.tscn")
 
 var movementSpeed = 0;
@@ -8,7 +10,6 @@ var old_direction = Vector2()
 var targetPosition = Vector2()
 var parts = Array()
 var hasMoved = false
-var dead = false
 var old_rotation = 0
 
 signal eat_food
@@ -33,11 +34,8 @@ func add_part():
 	part.visible = false
 
 func _process(delta):
-	
-	if dead:
-		return
-	
-	check_out_of_screen()		
+	if game_manager.state == game_manager.GAMESTATE.GAME_OVER:
+		return	
 	
 	if  Input.is_action_pressed("ui_up"):
 		direction = Vector2(0, -1)
@@ -57,12 +55,13 @@ func _process(delta):
 		
 	if !hasMoved and direction != Vector2(0,0):
 		hasMoved = true
-		
-	if hasMoved and old_direction == direction * -1:
-		direction = old_direction
-		$Sprite.rotation_degrees = old_rotation
+		game_manager.state = game_manager.GAMESTATE.PLAYING
 	
-	if hasMoved:
+	if hasMoved:		
+		if old_direction == direction * -1:
+			direction = old_direction
+			$Sprite.rotation_degrees = old_rotation
+		
 		movementSpeed += delta
 		if movementSpeed > .25 and position == targetPosition:
 			manage_parts()
@@ -70,9 +69,14 @@ func _process(delta):
 			position += direction * 64
 			old_direction = direction
 			targetPosition = targetPosition + (direction * 64)
-			
+		
+		check_out_of_screen()
 
 func check_out_of_screen():
+	
+	if game_manager.state != game_manager.GAMESTATE.PLAYING:
+		return
+		
 	var kill = false	
 	if get_viewport().get_visible_rect().size.x < global_position.x or 0 > global_position.x:
 		kill = true;
@@ -130,27 +134,22 @@ func manage_parts():
 	parts[parts.size() - 1].get_node("Sprite").set_texture(parts[0].PART_TAIL)
 
 func game_over():
-	if dead == false:
-		dead = true
+	if game_manager.state != game_manager.GAMESTATE.GAME_OVER:
 		get_parent().game_over()
 		$TimerFlash.start()
 		for part in parts:
 			part.get_node("TimerFlash").start()
 
-func _on_Player_area_entered(area):
-	
-	if dead:
-		return
-	
-	if area.is_in_group("food"):
-		area.global_position = Vector2(-100, -100)
-		area.hide()
-		add_part()
-		emit_signal("eat_food")			
-		
-	elif hasMoved and (area.is_in_group("part")):
-		game_over()
-	elif area.is_in_group("spike"):
-		if !area.dangerous:
-			game_over()
+func _on_Player_area_entered(area):	
+	if game_manager.state == game_manager.GAMESTATE.PLAYING:	
+		if area.is_in_group("food"):
+			area.global_position = Vector2(-100, -100)
+			area.hide()
+			add_part()
+			emit_signal("eat_food")						
+		elif area.is_in_group("part"):
+			game_over()			
+		elif area.is_in_group("spike"):
+			if area.danger:
+				game_over()
 		

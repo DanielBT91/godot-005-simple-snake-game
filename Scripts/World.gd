@@ -1,6 +1,6 @@
 extends Node
 
-var game_manager
+onready var game_manager = get_node("/root/GameManager")
 
 const FOOD = preload("res://Scenes/Food.tscn") 
 const SPIKE = preload("res://Scenes/Spike.tscn") 
@@ -13,7 +13,6 @@ var food_round_max = 5
 var spikes = Array()
 
 func _ready():	
-	game_manager = get_tree().get_root().get_node("GameManager")
 	game_manager.load_game()
 	$HUD.update_best(game_manager.save_data["best"])
 
@@ -62,7 +61,7 @@ func spawn_spike():
 
 func game_over():
 	if $Timer.time_left == 0:
-		
+		game_manager.state = game_manager.GAMESTATE.GAME_OVER
 		if food_eaten > game_manager.save_data["best"]:
 			print("new highscore")
 			game_manager.save_data["best"] = food_eaten
@@ -74,6 +73,7 @@ func game_over():
 		yield($Timer, "timeout")
 		print("reload scene")
 		get_tree().reload_current_scene()
+		game_manager.state = game_manager.GAMESTATE.WAITING
 
 func _on_Player_eat_food():	
 	food_eaten += 1		

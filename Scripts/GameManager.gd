@@ -1,5 +1,8 @@
 extends Node
 
+enum GAMESTATE {WAITING, PLAYING, GAME_OVER}
+var state = GAMESTATE.WAITING
+
 var save_data = {"best":0}
 var savegame = File.new()
 var save_path = "user://savegame.bin"
