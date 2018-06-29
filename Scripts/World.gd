@@ -84,3 +84,4 @@ func _on_Player_eat_food():
 	if food_round >= food_round_max:
 		food_round = 0
 		spawn_food()
+		spawn_spike()

@@ -4,10 +4,12 @@ onready var tween = $Sprite/Tween
 
 var counter = 0
 var counterMax = 5
+var dangerous = false
 
 func reinstate():
 	new_position()
 	start_tween()
+	dangerous = false
 
 func new_position():
 	var pos = Vector2(round(rand_range(0, 19)), round(rand_range(1, 10))) * 64
@@ -15,6 +17,9 @@ func new_position():
 	global_position = pos
 	
 func _process(delta):
+	
+	dangerous = $Sprite.modulate.a > .5
+	
 	counter += delta
 	if counter > counterMax:
 		counter = 0

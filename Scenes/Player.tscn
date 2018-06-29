@@ -33,4 +33,13 @@ _sections_unfolded = [ "Transform", "Z Index" ]
 
 shape = SubResource( 1 )
 
+[node name="TimerFlash" type="Timer" parent="." index="2"]
+
+process_mode = 1
+wait_time = 0.25
+one_shot = false
+autostart = false
+
+[connection signal="timeout" from="TimerFlash" to="." method="_on_TimerFlash_timeout"]
+
 

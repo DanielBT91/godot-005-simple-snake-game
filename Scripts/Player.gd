@@ -19,6 +19,9 @@ func _ready():
 	add_part()
 	add_part()
 
+func _on_TimerFlash_timeout():
+	visible = !visible
+
 func add_part():
 	var part = PART.instance()
 	if(parts.size() > 0):
@@ -130,6 +133,7 @@ func game_over():
 	if dead == false:
 		dead = true
 		get_parent().game_over()
+		$TimerFlash.start()
 		for part in parts:
 			part.get_node("TimerFlash").start()
 
@@ -144,6 +148,9 @@ func _on_Player_area_entered(area):
 		add_part()
 		emit_signal("eat_food")			
 		
-	elif hasMoved and (area.is_in_group("part") or area.is_in_group("spike")):
+	elif hasMoved and (area.is_in_group("part")):
 		game_over()
+	elif area.is_in_group("spike"):
+		if !area.dangerous:
+			game_over()
 		
