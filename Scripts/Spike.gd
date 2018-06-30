@@ -17,10 +17,7 @@ func new_position():
 	pos += Vector2(32, 32)
 	global_position = pos
 	
-func _process(delta):
-	
-	print(danger)
-	
+func _process(delta):	
 	if game_manager.state == game_manager.GAMESTATE.GAME_OVER:
 		tween.stop_all()
 		return

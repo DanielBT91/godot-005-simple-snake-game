@@ -2,8 +2,7 @@
 
 [ext_resource path="res://Scripts/HUD.gd" type="Script" id=1]
 
-
-[node name="HUD" type="Control" index="0"]
+[node name="HUD" type="Control"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -19,10 +18,11 @@ mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
 script = ExtResource( 1 )
-_sections_unfolded = [ "Grow Direction", "Margin", "Rect" ]
+_sections_unfolded = [ "Rect" ]
 
 [node name="Panel" type="Panel" parent="." index="0"]
 
+editor/display_folded = true
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -196,5 +196,45 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "Anchor", "Margin" ]
+
+[node name="PanelFeedback" type="Panel" parent="." index="1"]
+
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -639.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+_sections_unfolded = [ "Material", "Visibility", "custom_styles" ]
+
+[node name="Label" type="Label" parent="PanelFeedback" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 255.0
+margin_right = -321.0
+margin_bottom = -52.0
+rect_scale = Vector2( 2, 2 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "use arrows to move"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Rect", "Theme" ]
 
 

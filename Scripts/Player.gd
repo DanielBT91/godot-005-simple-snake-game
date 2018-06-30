@@ -55,7 +55,7 @@ func _process(delta):
 		
 	if !hasMoved and direction != Vector2(0,0):
 		hasMoved = true
-		game_manager.state = game_manager.GAMESTATE.PLAYING
+		game_manager.change_game_state(game_manager.GAMESTATE.PLAYING)
 	
 	if hasMoved:		
 		if old_direction == direction * -1:

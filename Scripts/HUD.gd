@@ -8,3 +8,7 @@ func update_food(var foods):
 
 func update_best(var best):
 	$Panel/HBoxContainer/LabelBest.text = str(best)
+
+func update_feedback(var text):
+	$PanelFeedback/Label.text = str(text)
+	

@@ -14,7 +14,7 @@ var spikes = Array()
 
 func _ready():	
 	game_manager.load_game()
-	$HUD.update_best(game_manager.save_data["best"])
+	game_manager.get_node("HUD").update_best(game_manager.save_data["best"])
 
 	randomize()
 
@@ -61,7 +61,7 @@ func spawn_spike():
 
 func game_over():
 	if $Timer.time_left == 0:
-		game_manager.state = game_manager.GAMESTATE.GAME_OVER
+		game_manager.change_game_state(game_manager.GAMESTATE.GAME_OVER)
 		if food_eaten > game_manager.save_data["best"]:
 			print("new highscore")
 			game_manager.save_data["best"] = food_eaten
@@ -73,11 +73,11 @@ func game_over():
 		yield($Timer, "timeout")
 		print("reload scene")
 		get_tree().reload_current_scene()
-		game_manager.state = game_manager.GAMESTATE.WAITING
+		game_manager.change_game_state(game_manager.GAMESTATE.WAITING)
 
 func _on_Player_eat_food():	
 	food_eaten += 1		
-	$HUD.update_food(food_eaten)
+	game_manager.get_node("HUD").update_food(food_eaten)
 	spawn_food()
 	
 	food_round += 1
